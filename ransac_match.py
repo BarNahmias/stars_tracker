@@ -2,6 +2,7 @@ import random
 import cv2
 import numpy as np
 
+
 # margin range 0.0-0.499..
 def remove_edge_stars(keypoints, width, height, margin=0.1):
     # Define the range of x and y coordinates to include
@@ -12,6 +13,7 @@ def remove_edge_stars(keypoints, width, height, margin=0.1):
     filtered = [kp for kp in keypoints if range_x[0] <= kp.pt[0] <= range_x[1] and range_y[0] <= kp.pt[1] <= range_y[1]]
 
     return filtered
+
 
 def process_image(image_path):
     # Load the image and convert to grayscale
@@ -24,7 +26,7 @@ def process_image(image_path):
     filtered_img = cv2.Canny(img_blur, 100, 200)
 
     # Detect keypoints using SIFT
-    sift = cv2.SIFT_create(sigma=1.0, edgeThreshold=20, contrastThreshold=0.07, nOctaveLayers=15)
+    sift = cv2.SIFT_create(sigma=1.6, edgeThreshold=20, contrastThreshold=0.07, nOctaveLayers=15)
     keypoints = sift.detect(filtered_img, None)
 
     # Remove keypoints that are too close to each other
@@ -42,7 +44,9 @@ def process_image(image_path):
 
     # Draw keypoints on the filtered image
     img_with_keypoints = cv2.drawKeypoints(filtered_img, filtered_keypoints, None, color=(255, 255, 255))
+
     return img_with_keypoints, filtered_keypoints
+
 
 def ransac(keypoints, range_value, max_iterations):
     best_inliers = []
@@ -77,6 +81,7 @@ def ransac(keypoints, range_value, max_iterations):
 
     return len(best_inliers), best_inliers, best_p1, best_p2
 
+
 def ransac_match(keypoints, range_value, max_iterations, inlier_count, delta):
     best_inliers = []
     best_p1 = None
@@ -108,11 +113,11 @@ def ransac_match(keypoints, range_value, max_iterations, inlier_count, delta):
             best_p1 = p1
             best_p2 = p2
 
-
         if (len(best_inliers) >= inlier_count - delta) and (len(best_inliers) >= inlier_count + delta):
             break
 
     return len(best_inliers), best_inliers, best_p1, best_p2
+
 
 def draw_image(image, group_a_pts, group_b_pts, p1, p2):
     # Make a copy of the input image so we don't modify the original
@@ -126,16 +131,20 @@ def draw_image(image, group_a_pts, group_b_pts, p1, p2):
     # Draw group B points in blue
     for pt in group_b_pts:
         cv2.circle(img, (int(pt.pt[0]), int(pt.pt[1])), 3, (255, 0, 0), -1)
-        cv2.rectangle(img, (int(pt.pt[0]-10), int(pt.pt[1]-box_size)), (int(pt.pt[0]+box_size), int(pt.pt[1]+box_size)), (0, 255, 0), 2)
+        cv2.rectangle(img, (int(pt.pt[0] - 10), int(pt.pt[1] - box_size)),
+                      (int(pt.pt[0] + box_size), int(pt.pt[1] + box_size)), (0, 255, 0), 2)
     # Draw a green square around points p1 and p2
-    cv2.rectangle(img, (int(p1.pt[0]-box_size), int(p1.pt[1]-box_size)), (int(p1.pt[0]+box_size), int(p1.pt[1]+box_size)), (0, 255, 0), 2)
-    cv2.rectangle(img, (int(p2.pt[0]-box_size), int(p2.pt[1]-box_size)), (int(p2.pt[0]+box_size), int(p2.pt[1]+box_size)), (0, 255, 0), 2)
+    cv2.rectangle(img, (int(p1.pt[0] - box_size), int(p1.pt[1] - box_size)),
+                  (int(p1.pt[0] + box_size), int(p1.pt[1] + box_size)), (0, 255, 0), 2)
+    cv2.rectangle(img, (int(p2.pt[0] - box_size), int(p2.pt[1] - box_size)),
+                  (int(p2.pt[0] + box_size), int(p2.pt[1] + box_size)), (0, 255, 0), 2)
 
     # Draw a red line between points p1 and p2
     cv2.line(img, (int(p1.pt[0]), int(p1.pt[1])), (int(p2.pt[0]), int(p2.pt[1])), (0, 0, 255), 2)
-    image_with_lines_resized = cv2.resize(img, (0, 0), fx=0.20, fy=0.20)
+    image_with_lines_resized = cv2.resize(img, (0, 0), fx=0.30, fy=0.30)
 
     return image_with_lines_resized
+
 
 def draw_image_match(image, group_a_pts, group_b_pts):
     # Make a copy of the input image so we don't modify the original
@@ -145,14 +154,15 @@ def draw_image_match(image, group_a_pts, group_b_pts):
 
     # Draw group B points in blue
     for pt in group_b_pts:
-        cv2.rectangle(img, (int(pt.pt[0]-10), int(pt.pt[1]-box_size)), (int(pt.pt[0]+box_size), int(pt.pt[1]+box_size)), (0, 255, 0), 2)
+        cv2.rectangle(img, (int(pt.pt[0] - 10), int(pt.pt[1] - box_size)),
+                      (int(pt.pt[0] + box_size), int(pt.pt[1] + box_size)), (0, 255, 0), 2)
 
-    image_with_lines_resized = cv2.resize(img, (0, 0), fx=0.20, fy=0.20)
+    image_with_lines_resized = cv2.resize(img, (0, 0), fx=0.30, fy=0.30)
 
     return image_with_lines_resized
 
-def transform_keypoints(input_pts, src_pt1, src_pt2, dst_pt1, dst_pt2):
 
+def transform_keypoints(input_pts, src_pt1, src_pt2, dst_pt1, dst_pt2):
     # Compute the transformation matrix using the two pairs of corresponding points
     src_pts = np.array([[src_pt1.pt[0], src_pt1.pt[1]], [src_pt2.pt[0], src_pt2.pt[1]]])
     dst_pts = np.array([[dst_pt1.pt[0], dst_pt1.pt[1]], [dst_pt2.pt[0], dst_pt2.pt[1]]])
@@ -167,54 +177,48 @@ def transform_keypoints(input_pts, src_pt1, src_pt2, dst_pt1, dst_pt2):
 
     return transformed_pts
 
+
 def find_shared_keypoints(keypoints1, keypoints2, delta_range):
     shared_keypoints = []
     for kp1 in keypoints1:
         for kp2 in keypoints2:
-            delta = np.sqrt((kp1.pt[0]-kp2.pt[0])**2 + (kp1.pt[1]-kp2.pt[1])**2)
+            delta = np.sqrt((kp1.pt[0] - kp2.pt[0]) ** 2 + (kp1.pt[1] - kp2.pt[1]) ** 2)
             if delta <= delta_range:
                 shared_keypoints.append(kp1)
                 break
     return shared_keypoints
 
+
 def main():
     # Load the image and convert to grayscale
-    image_path='ST_db2.png'
-    img ,keypoints = process_image(image_path)
-
-
+    image_path = 'ST_db2.png'
+    img, keypoints = process_image(image_path)
 
     # Filter out keypoints on the edges of the image
     keypoints = remove_edge_stars(keypoints, img.shape[1], img.shape[0])
 
     # Fit a line to the remaining keypoints using RANSAC
     # inliers_count, slope, intercept, inliers, p1, p2= ransac(keypoints, 100, 10000)
-    inliers_count,inliers, p1, p2= ransac(keypoints, 100, 1000000)
-    image_with_line_resized= draw_image(img,keypoints,inliers,p1,p2)
-
+    inliers_count, inliers, p1, p2 = ransac(keypoints, 100, 1000000)
+    image_with_line_resized = draw_image(img, keypoints, inliers, p1, p2)
 
     # Load the image and convert to grayscale
-    image_path1='fr2.jpg'
-    img1 ,keypoints1 = process_image(image_path1)
+    image_path1 = 'ST_db1.png'
+    img1, keypoints1 = process_image(image_path1)
     # Filter out keypoints on the edges of the image
     keypoints1 = remove_edge_stars(keypoints1, img1.shape[1], img1.shape[0])
 
     # Fit a line to the remaining keypoints using RANSAC
-    inliers_count1, inliers1, p11, p21 = ransac_match(keypoints1, 100, 1000000,inliers_count,0)
-    image_with_line_resized1= draw_image(img1,keypoints1,inliers1,p11,p21)
-
+    inliers_count1, inliers1, p11, p21 = ransac_match(keypoints1, 100, 1000000, inliers_count, 0)
+    image_with_line_resized1 = draw_image(img1, keypoints1, inliers1, p11, p21)
 
     transformed_pts = transform_keypoints(keypoints, p1, p2, p11, p21)
 
-    match_keypoints = find_shared_keypoints(transformed_pts,keypoints1,500)
+    match_keypoints = find_shared_keypoints(transformed_pts, keypoints1, 200)
 
-    image_with_line_resized_match = draw_image_match(img1,keypoints1,match_keypoints)
-    #
-    for kp in match_keypoints:
-        x, y = kp.pt
-        r = kp.size
-        b = kp.response
-        print(f'x: ', {x}, f'y: ', {y}, f'r: ', {r}, f'b: ', {b})
+    image_with_line_resized_match = draw_image_match(img1, keypoints1, match_keypoints)
+
+    print(match_keypoints)
     # Show the image
     cv2.imshow('Original', image_with_line_resized)
     cv2.imshow('Opened', image_with_line_resized1)
@@ -222,6 +226,7 @@ def main():
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
 
 if __name__ == '__main__':
     main()
