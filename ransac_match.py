@@ -214,7 +214,7 @@ def main():
 
     transformed_pts = transform_keypoints(keypoints, p1, p2, p11, p21)
 
-    match_keypoints = find_shared_keypoints(transformed_pts, keypoints1, 200)
+    match_keypoints = find_shared_keypoints(transformed_pts, keypoints1, 500)
 
     image_with_line_resized_match = draw_image_match(img1, keypoints1, match_keypoints)
 
