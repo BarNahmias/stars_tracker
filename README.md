@@ -1,6 +1,6 @@
 # stars_tracker
 ## Image Processing and Similar Triangles
-This Python code applies various image processing techniques and the RANSAC algorithm to find the best line that fits a set of keypoints detected in an image.
+This Python code applies various image processing techniques Constellation Matching to find the best line that fits a set of keypoints detected in an image.
 
 Dependencies
 The following libraries are required to run this code:
