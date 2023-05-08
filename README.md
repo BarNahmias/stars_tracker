@@ -1,29 +1,25 @@
 # stars_tracker
 ## Image Processing and Similar Triangles
-This Python code applies various image processing techniques Constellation Matching to find the best line that fits a set of keypoints detected in an image.
+This Python code applies various image processing techniques to find similar triangles that form the best transformation to a set of keypoints identified in the images.
 
-Dependencies
+## Dependencies
 The following libraries are required to run this code:
 
 OpenCV (cv2)
 NumPy
 Random
-Installation
+## Installation
 To install the required dependencies, you can use the following command:
 
 
 pip install opencv-python numpy
 Usage
+
 The code can be run from the command line by providing an image file as an argument. For example:
 
-python main.py image.jpg
+python triangle.py 
 
-
-Image Processing
-The image processing pipeline consists of the following steps:
-
-star tracker
-Algorithm description:
+## Algorithm description:
 
 An algorithm for solving the problem of matching the stars between two images and finding the transition matrix between them
 
