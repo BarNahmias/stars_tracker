@@ -238,7 +238,7 @@ def find_match_stras(image1,image2):
     angle_list1 = angle(triangle_list1)
     angle_list2 = angle(triangle_list2)
     similar_triangle = get_shared_angle(angle_list1,angle_list2)
-    shared_keypoints ,transformed_points, original =best_tra_transform(similar_triangle,kp1,kp2,1)
+    shared_keypoints ,transformed_points, original =best_tra_transform(similar_triangle,kp1,kp2,25)
     img3=draw_image(img2,shared_keypoints)
     img4=draw_image(img1,original)
     cv2.imshow('D.B', img4)
