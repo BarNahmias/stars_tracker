@@ -247,8 +247,11 @@ def find_match_stras(image1,image2):
     cv2.destroyAllWindows()
     print_keypoint_info(shared_keypoints)
 
-
 find_match_stras('ST_db1.png','ST_db2.png')
-find_match_stras('fr2.jpg','fr1.jpg')
 find_match_stras('ST_db1.png','fr2.jpg')
+find_match_stras('ST_db2.png','fr2.jpg')
+find_match_stras('ST_db2.png','ST_db1.png')
+find_match_stras('fr1.jpg','fr2.jpg')
+find_match_stras('fr2.jpg','fr1.jpg')
+find_match_stras('fr2.jpg','ST_db1.png')
 find_match_stras('fr2.jpg','ST_db2.png')
