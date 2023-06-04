@@ -255,3 +255,7 @@ find_match_stras('fr1.jpg','fr2.jpg')
 find_match_stras('fr2.jpg','fr1.jpg')
 find_match_stras('fr2.jpg','ST_db1.png')
 find_match_stras('fr2.jpg','ST_db2.png')
+find_match_stras('image_small_0.jpg','image_big_0.jpg')
+find_match_stras('str6.jpg','str7.png')
+find_match_stras('str15.jpg','str14.jpg')
+
