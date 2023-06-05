@@ -260,3 +260,5 @@ find_match_stras('fr2.jpg','ST_db2.png',0.9)
 find_match_stras('image_small_0.jpg','image_big_0.jpg',1.3)
 find_match_stras('str6.jpg','str7.jpg',1.3)
 find_match_stras('str14.jpg','str15.jpg',1.3)
+
+
