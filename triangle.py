@@ -27,7 +27,7 @@ The function receives a processed image using the load_image function.
 Outputs coordinates of stars in SIFT means.
  Creates patterns of triangles using three stars
 """
-def create_triangle(image):
+def create_triangle(image,sigma):
     img = cv2.imread(image)
     filtered_img = load_image(image)
 
@@ -35,7 +35,7 @@ def create_triangle(image):
     # and extract descriptors from images using the SIFT algorithm.
     # The sigma parameter sets the scale of the difference of Gaussians used to detect keypoints
 
-    sift = cv2.SIFT_create(sigma=0.9)
+    sift = cv2.SIFT_create(sigma)
     kp = sift.detect(filtered_img, None)
     # sort the stars by response
     kp_filter = sorted(kp, key=lambda x: x.size, reverse=True)
@@ -232,9 +232,9 @@ def draw_triangles(image, triangles):
 """
 
 """
-def find_match_stras(image1,image2):
-    triangle_list1 ,kp1 ,img1 = create_triangle(image1)
-    triangle_list2 ,kp2 ,img2 = create_triangle(image2)
+def find_match_stras(image1,image2,sigma):
+    triangle_list1 ,kp1 ,img1 = create_triangle(image1,sigma)
+    triangle_list2 ,kp2 ,img2 = create_triangle(image2,sigma)
     angle_list1 = angle(triangle_list1)
     angle_list2 = angle(triangle_list2)
     similar_triangle = get_shared_angle(angle_list1,angle_list2)
@@ -247,15 +247,14 @@ def find_match_stras(image1,image2):
     cv2.destroyAllWindows()
     print_keypoint_info(shared_keypoints)
 
-find_match_stras('ST_db1.png','ST_db2.png')
-find_match_stras('ST_db1.png','fr2.jpg')
-find_match_stras('ST_db2.png','fr2.jpg')
-find_match_stras('ST_db2.png','ST_db1.png')
-find_match_stras('fr1.jpg','fr2.jpg')
-find_match_stras('fr2.jpg','fr1.jpg')
-find_match_stras('fr2.jpg','ST_db1.png')
-find_match_stras('fr2.jpg','ST_db2.png')
-find_match_stras('image_small_0.jpg','image_big_0.jpg')
-find_match_stras('str6.jpg','str7.png')
-find_match_stras('str15.jpg','str14.jpg')
-
+find_match_stras('ST_db1.png','ST_db2.png',0.9)
+find_match_stras('ST_db1.png','fr2.jpg',0.9)
+find_match_stras('ST_db2.png','fr2.jpg',0.9)
+find_match_stras('ST_db2.png','ST_db1.png',0.9)
+find_match_stras('fr1.jpg','fr2.jpg',0.9)
+find_match_stras('fr2.jpg','fr1.jpg',0.9)
+find_match_stras('fr2.jpg','ST_db1.png',0.9)
+find_match_stras('fr2.jpg','ST_db2.png',0.9)
+find_match_stras('image_small_0.jpg','image_big_0.jpg',1.3)
+find_match_stras('str6.jpg','str7.png',1.3)
+find_match_stras('str15.jpg','str14.jpg',1.3)
