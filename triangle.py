@@ -11,11 +11,12 @@ https://benedikt-bitterli.me/astro/
 """
 The function receives an image and performs noise filtering and image processing
 """
-def load_image(image):
+def load_image(image,flag):
     # Load image
     img = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
     # Apply binary thresholding to convert to black and white
-    # ret, img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+    if flag:
+        ret, img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
     # define structuring element for morphological operations
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
     # perform morphological opening to remove small spots
@@ -27,9 +28,9 @@ The function receives a processed image using the load_image function.
 Outputs coordinates of stars in SIFT means.
  Creates patterns of triangles using three stars
 """
-def create_triangle(image,sigma):
+def create_triangle(image,sigma,flag):
     img = cv2.imread(image)
-    filtered_img = load_image(image)
+    filtered_img = load_image(image,flag)
 
     #The cv2.SIFT_create() function creates a SIFT object that can be used to detect keypoints
     # and extract descriptors from images using the SIFT algorithm.
@@ -232,9 +233,9 @@ def draw_triangles(image, triangles):
 """
 
 """
-def find_match_stras(image1,image2,sigma):
-    triangle_list1 ,kp1 ,img1 = create_triangle(image1,sigma)
-    triangle_list2 ,kp2 ,img2 = create_triangle(image2,sigma)
+def find_match_stras(image1,image2,sigma,flag):
+    triangle_list1 ,kp1 ,img1 = create_triangle(image1,sigma,flag)
+    triangle_list2 ,kp2 ,img2 = create_triangle(image2,sigma,flag)
     angle_list1 = angle(triangle_list1)
     angle_list2 = angle(triangle_list2)
     similar_triangle = get_shared_angle(angle_list1,angle_list2)
@@ -248,17 +249,20 @@ def find_match_stras(image1,image2,sigma):
     print_keypoint_info(shared_keypoints)
 
 
-
-find_match_stras('ST_db1.png','ST_db2.png',0.9)
-find_match_stras('ST_db1.png','fr2.jpg',0.9)
-find_match_stras('ST_db2.png','fr2.jpg',0.9)
-find_match_stras('ST_db2.png','ST_db1.png',0.9)
-find_match_stras('fr1.jpg','fr2.jpg',0.9)
-find_match_stras('fr2.jpg','fr1.jpg',0.9)
-find_match_stras('fr2.jpg','ST_db1.png',0.9)
-find_match_stras('fr2.jpg','ST_db2.png',0.9)
-find_match_stras('image_small_0.jpg','image_big_0.jpg',1.3)
-find_match_stras('str6.jpg','str7.jpg',1.3)
-find_match_stras('str14.jpg','str15.jpg',1.3)
+flag = 1
+sigma = 0.9
+find_match_stras('ST_db1.png','ST_db2.png',sigma,flag)
+find_match_stras('ST_db1.png','fr2.jpg',sigma,flag)
+find_match_stras('ST_db2.png','fr2.jpg',sigma,flag)
+find_match_stras('ST_db2.png','ST_db1.png',sigma,flag)
+find_match_stras('fr1.jpg','fr2.jpg',sigma,flag)
+find_match_stras('fr2.jpg','fr1.jpg',sigma,flag)
+find_match_stras('fr2.jpg','ST_db1.png',sigma,flag)
+find_match_stras('fr2.jpg','ST_db2.png',sigma,flag)
+flag = 0
+sigma=1.3
+find_match_stras('image_small_0.jpg','image_big_0.jpg',sigma,flag)
+find_match_stras('str6.jpg','str7.jpg',sigma,flag)
+find_match_stras('str14.jpg','str15.jpg',sigma,flag)
 
 
