@@ -35,7 +35,7 @@ def create_triangle(image,sigma):
     # and extract descriptors from images using the SIFT algorithm.
     # The sigma parameter sets the scale of the difference of Gaussians used to detect keypoints
 
-    sift = cv2.SIFT_create(sigma)
+    sift = cv2.SIFT_create(sigma=sigma)
     kp = sift.detect(filtered_img, None)
     # sort the stars by response
     kp_filter = sorted(kp, key=lambda x: x.size, reverse=True)
