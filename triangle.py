@@ -15,7 +15,7 @@ def load_image(image):
     # Load image
     img = cv2.imread(image, cv2.IMREAD_GRAYSCALE)
     # Apply binary thresholding to convert to black and white
-    ret, img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+    # ret, img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
     # define structuring element for morphological operations
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
     # perform morphological opening to remove small spots
@@ -238,7 +238,7 @@ def find_match_stras(image1,image2,sigma):
     angle_list1 = angle(triangle_list1)
     angle_list2 = angle(triangle_list2)
     similar_triangle = get_shared_angle(angle_list1,angle_list2)
-    shared_keypoints ,transformed_points, original =best_tra_transform(similar_triangle,kp1,kp2,25)
+    shared_keypoints ,transformed_points, original =best_tra_transform(similar_triangle,kp1,kp2,15)
     img3=draw_image(img2,shared_keypoints)
     img4=draw_image(img1,original)
     cv2.imshow('D.B', img4)
@@ -246,6 +246,8 @@ def find_match_stras(image1,image2,sigma):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     print_keypoint_info(shared_keypoints)
+
+
 
 find_match_stras('ST_db1.png','ST_db2.png',0.9)
 find_match_stras('ST_db1.png','fr2.jpg',0.9)
@@ -257,4 +259,4 @@ find_match_stras('fr2.jpg','ST_db1.png',0.9)
 find_match_stras('fr2.jpg','ST_db2.png',0.9)
 find_match_stras('image_small_0.jpg','image_big_0.jpg',1.3)
 find_match_stras('str6.jpg','str7.jpg',1.3)
-find_match_stras('str15.jpg','str14.jpg',1.3)
+find_match_stras('str14.jpg','str15.jpg',1.3)
